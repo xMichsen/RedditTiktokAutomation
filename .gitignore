@@ -1,0 +1,38 @@
+# Sensitive data and configurations
+.env
+credentials.json
+
+# Audio and video files
+*.mp4
+*.mp3
+
+# Generated folders with output files
+output_audio/
+output_images/
+final_output/
+
+# Local environment configurations
+__pycache__/
+*.py[cod]
+*.log
+*.DS_Store
+
+# Virtual environments
+venv/
+env/
+.venv/
+
+# System temporary files
+*.swp
+*.swo
+Thumbs.db
+
+# Dependencies (optional, if you manage a virtual environment)
+Pipfile
+Pipfile.lock
+poetry.lock
+
+# IDE related files
+.vscode/
+.idea/
+*.iml
