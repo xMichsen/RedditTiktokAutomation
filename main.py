@@ -4,6 +4,7 @@ from TTSService import TTSGenerator
 from ImageService import ImageService
 from VideoEditService import VideoEditService
 import os
+import html
 
 def clear_folder(folder_path):
     """
@@ -25,12 +26,12 @@ parser = argparse.ArgumentParser(description="Automate video creation from Reddi
 
 parser.add_argument("--redditURL", type=str, required=True, help="URL of the Reddit thread to process.")
 parser.add_argument("--topComments", type=int, default=5, help="Number of top comments to process.")
-parser.add_argument("--language", type=str, default="en-US", help="Language code for TTS (e.g., en-US, pl-PL).")
-parser.add_argument("--voice", type=str, default="en-US-Casual-K", help="Name of the TTS voice to use.")
+parser.add_argument("--language", type=str, default="pl-PL", help="Language code for TTS (e.g., en-US, pl-PL).")
+parser.add_argument("--voice", type=str, default="pl-PL-Standard-G", help="Name of the TTS voice to use.")
 parser.add_argument("--gender", type=str, default="MALE", choices=["MALE", "FEMALE", "NEUTRAL"], help="Gender of the TTS voice.")
-parser.add_argument("--rate", type=float, default=1.0, help="Speaking rate for TTS.")
+parser.add_argument("--rate", type=float, default=1.2, help="Speaking rate for TTS.")
 parser.add_argument("--pitch", type=float, default=0.2, help="Pitch for TTS.")
-parser.add_argument("--inputVideo", type=str, default="./input_videos/mcparkour.mp4", help="Path to the input video file.")
+parser.add_argument("--inputVideo", type=str, default="./input_videos/mcparkour6min.mp4", help="Path to the input video file.")
 parser.add_argument("--outputVideo", type=str, default="./final_output/output.mp4", help="Path to the output video file.")
 parser.add_argument("--outputAudioFolder", type=str, default="output_audio", help="Folder to save generated audio files.")
 parser.add_argument("--outputImagesFolder", type=str, default="output_images", help="Folder to save generated images.")
@@ -69,9 +70,9 @@ videoService = VideoEditService(
 )
 
 # Generate TTS and image for the title
-ttsClient.text_to_speech(info['title'], filename=os.path.join(args.outputAudioFolder, 'comment0.mp3'))
+ttsClient.text_to_speech(html.unescape(info['title']), filename=os.path.join(args.outputAudioFolder, 'comment0.mp3'))
 titleImageService.create_reddit_style_image(
-    info['title'],
+    html.unescape(info['title']),
     output_path=os.path.join(args.outputImagesFolder, 'comment0.png'),
     subreddit=info['subreddit'],
     username=info['author']
@@ -79,9 +80,9 @@ titleImageService.create_reddit_style_image(
 
 # Process comments
 for i, comment in enumerate(top_comments, start=1):
-    ttsClient.text_to_speech(comment['body'], filename=os.path.join(args.outputAudioFolder, f"comment{i}.mp3"))
+    ttsClient.text_to_speech(html.unescape(comment['body']), filename=os.path.join(args.outputAudioFolder, f"comment{i}.mp3"))
     imageService.create_reddit_style_image(
-        comment['body'],
+        html.unescape(comment['body']),
         output_path=os.path.join(args.outputImagesFolder, f"comment{i}.png"),
         subreddit=info['subreddit'],
         username=comment['author']

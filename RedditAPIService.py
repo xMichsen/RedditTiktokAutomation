@@ -38,7 +38,7 @@ class RedditAPIService:
             'num_comments': num_comments
         }
 
-    def get_top_comments(self, n):
+    def get_top_comments(self, n, max_words_per_comment=30):
         if self.thread_data is None:
             raise Exception("Thread data has not been fetched. Call fetch_thread() first.")
         # Comments are in the second element of the list
@@ -48,8 +48,22 @@ class RedditAPIService:
         for comment in comments:
             if comment['kind'] != 'more' and count < n:
                 data = comment['data']
-                author = data.get('author')
+                authorLowerCase = data.get('author').lower()
                 body = data.get('body')
+
+                # Filter out comments that are too long
+                word_count = len(body.split())
+                if word_count > max_words_per_comment:
+                    continue  # Skip this comment
+
+                # Skip comments from users containing "moderator"
+                if "moderator" in authorLowerCase:
+                    continue
+
+                if "https://" in body or "http://" in body:
+                    continue
+
+                author = data.get('author')
                 upvotes = data.get('ups')
                 downvotes = data.get('downs')
                 top_comments.append({

@@ -3,7 +3,7 @@ import textwrap
 import os
 
 class ImageService:
-    def __init__(self, width=800, background_color=(26, 26, 27),
+    def __init__(self, width=820, background_color=(26, 26, 27),
                  text_color=(255, 255, 255), font_path=None, font_size=32):
         self.width = width
         self.background_color = background_color
@@ -12,7 +12,7 @@ class ImageService:
         self.normal_font = "./fonts/reddit_sans/RedditSans-VariableFont_wght.ttf"
         self.font_size = font_size
         # Font for username and upvotes/downvotes
-        self.small_font_size = int(font_size * 0.6)
+        self.small_font_size = int(font_size * 0.7)
         self.small_font = ImageFont.truetype(self.normal_font, self.small_font_size)
         self.avatar_size = (50, 50)  # Size of the avatar
 
@@ -57,7 +57,7 @@ class ImageService:
 
         # Drawing username in the top left corner
         username_text = f"u/{username}"
-        username_position = (self.avatar_size[0] + 20, 10)
+        username_position = (self.avatar_size[0] + 20, 7)
         draw.text(username_position, username_text, fill=self.text_color, font=self.small_font)
 
         # Drawing subreddit name below the username
@@ -83,8 +83,8 @@ class ImageService:
         bubble_position = (upvote_arrow_position[0] + 65, upvote_arrow_position[1])
         img.paste(upvote_arrow, upvote_arrow_position, upvote_arrow)
         img.paste(bubble, bubble_position, bubble)
-        draw.text((upvote_arrow_position[0] + 25, upvote_arrow_position[1] - 3), upvotes_and_comments_text, fill='lightgray', font=self.small_font)
-        draw.text((bubble_position[0] + 25, bubble_position[1] - 3), upvotes_and_comments_text, fill='lightgray', font=self.small_font)
+        draw.text((upvote_arrow_position[0] + 25, upvote_arrow_position[1] - 5), upvotes_and_comments_text, fill='lightgray', font=self.small_font)
+        draw.text((bubble_position[0] + 25, bubble_position[1] - 5), upvotes_and_comments_text, fill='lightgray', font=self.small_font)
         
         # Drawing share icon and share text next to it in the bottom right corner
         share_text = "Share"
@@ -92,7 +92,7 @@ class ImageService:
         share_icon = share_icon.resize((20, 20))
         share_icon_position = (self.width - 90, total_height - 30)
         img.paste(share_icon, share_icon_position, share_icon)
-        draw.text((share_icon_position[0] + 25, share_icon_position[1] - 3), share_text, fill='lightgray', font=self.small_font)
+        draw.text((share_icon_position[0] + 25, share_icon_position[1] - 5), share_text, fill='lightgray', font=self.small_font)
 
         # Starting y position for text (below the header)
         y = header_height
