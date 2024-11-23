@@ -60,7 +60,7 @@ class RedditAPIService:
                 if "moderator" in authorLowerCase:
                     continue
 
-                if "https://" in body or "http://" in body:
+                if "https://" in body or "http://" in body or body == "[removed]" or body == "[deleted]":
                     continue
 
                 author = data.get('author')
@@ -76,3 +76,33 @@ class RedditAPIService:
             if count >= n:
                 break
         return top_comments
+
+    def get_all_comments(self, max_words_per_comment=30):
+        """
+        Returns all available comments, filtered by length and other criteria.
+        """
+        if self.thread_data is None:
+            raise Exception("Thread data has not been fetched. Call fetch_thread() first.")
+        comments = self.thread_data[1]['data']['children']
+        all_comments = []
+        for comment in comments:
+            if comment['kind'] != 'more':
+                data = comment['data']
+                authorLowerCase = data.get('author', '').lower()
+                body = data.get('body', '')
+
+                # Filter out comments based on conditions
+                if len(body.split()) > max_words_per_comment:
+                    continue
+                if "moderator" in authorLowerCase or body in ["[removed]", "[deleted]"]:
+                    continue
+                if "https://" in body or "http://" in body:
+                    continue
+
+                all_comments.append({
+                    'author': data.get('author'),
+                    'body': body,
+                    'upvotes': data.get('ups'),
+                    'downvotes': data.get('downs')
+                })
+        return all_comments
